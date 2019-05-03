@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
 
 android {
     compileSdkVersion 28
@@ -33,15 +34,31 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
-task clearJar(type: Delete) {
-    delete 'build/outputs/mypluginlibrary.jar'
-}
+//task clearJar(type: Delete) {
+//    delete 'build/outputs/mypluginlibrary.jar'
+//}
+//
+//task makeJar(type: Copy) {
+//    from('build/intermediates/packaged-classes/release/')
+//    into('build/outputs/')
+//    include('classes.jar')
+//    rename ('classes.jar', 'mypluginlibrary.jar')
+//}
+//
+//makeJar.dependsOn(clearJar, build)
 
-task makeJar(type: Copy) {
-    from('build/intermediates/packaged-classes/release/')
-    into('build/outputs/')
-    include('classes.jar')
-    rename ('classes.jar', 'mypluginlibrary.jar')
-}
+uploadArchives {
+    repositories.mavenDeployer {
+        //本地仓库路径，以放到项目根目录下的 repo 的文件夹为例
+        repository(url: uri('../repo'))
 
-makeJar.dependsOn(clearJar, build)
+        //groupId ，自行定义
+        pom.groupId = 'com.example.xydzjnq'
+
+        //artifactId
+        pom.artifactId = 'mypluginlibrary'
+
+        //插件版本号
+        pom.version = '1.0.0'
+    }
+}
